@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="ncalc" Version="1.3.8" />
+		<PackageReference Include="Sprache" Version="2.3.1" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Calculator.Common\Calculator.Common.csproj" />
+		<ProjectReference Include="..\Calculator.Parser\Calculator.Parser.csproj" />
+	</ItemGroup>
+
+</Project>
