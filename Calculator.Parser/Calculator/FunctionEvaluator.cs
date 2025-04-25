@@ -249,19 +249,35 @@ namespace Calculator.Parser.Calculator
 
         private static Expression HandleFact(Expression[] args)
         {
-            if (args.Length != 1)
-                throw new CalculatorException("Функция fact требует ровно один аргумент");
+            if (args.Length == 0)
+                throw new CalculatorException("Функция fact требует хотя бы один аргумент");
 
-            var arg = args[0];
-            // Ищем метод VectorOperations.Fact(double) или VectorOperations.Fact(double[])
-            var methodInfo = typeof(VectorOperations)
-                .GetMethod("Fact", new[] { arg.Type });
-            if (methodInfo == null)
-                throw new InvalidOperationException($"Метод VectorOperations.Fact({arg.Type.Name}) не найден.");
+            var factMethodInfo = typeof(VectorOperations).GetMethod("Fact", new[] { typeof(double) });
+            if (factMethodInfo == null)
+                throw new InvalidOperationException("Метод VectorOperations.Fact(double) не найден.");
 
-            // Возвращаем прямой вызов этой перегрузки
-            return Expression.Call(methodInfo, arg);
+            // Список, в который будут добавляться выражения для всех аргументов
+            var factExpressions = new List<Expression>();
+
+            foreach (var arg in args)
+            {
+                if (arg.Type.IsArray)
+                {
+                    // Если аргумент - массив, применяем операцию для каждого элемента массива
+                    factExpressions.Add(ApplyUnaryToArray(arg, factMethodInfo));
+                }
+                else
+                {
+                    // Если аргумент - одиночное значение, применяем метод Fact к этому значению
+                    factExpressions.Add(Expression.Call(factMethodInfo, arg));
+                }
+            }
+
+            // Если у нас несколько выражений, создаем объединение этих выражений
+            return factExpressions.Count == 1 ? factExpressions.First() : Expression.NewArrayInit(typeof(double), factExpressions);
         }
+
+
 
 
         /// <summary>
